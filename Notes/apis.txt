@@ -15,14 +15,21 @@ DELETE /api/roles/:id – Delete a role
 
 
 //User apis:
+
 Method	Endpoint	Description
-POST	/api/users/register	Register a new user
-POST	/api/users/login	Login and get JWT token
-GET	/api/users/profile	Get current user's profile
-GET	/api/users/	Get all users
-GET	/api/users/:id	Get user by ID
-PUT	/api/users/:id	Update user by ID
-DELETE	/api/users/:id	Delete user by ID
+POST	/api/users/register	Register a new user (Franchisor / Franchisee / Customer)
+POST	/api/auth/login	Login user and return JWT token
+Method	Endpoint	Description
+POST	/api/users/forgot-password	Sends a password reset email with a JWT token
+POST	/api/users/reset-password/:token   Verifies token and resets user password securely
+GET	/api/users	Get all users
+GET	/api/users/:id	Get a specific user by ID
+PUT	/api/users/:id	Update a user’s details
+DELETE	/api/users/:id	Delete a user by ID
+
+
+
+Add franchise analytics route later*******************
 
 
 

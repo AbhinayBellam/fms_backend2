@@ -13,6 +13,15 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
+
+
+const franchiseRoutes = require('./features/franchise/routes/franchise.routes');
+const applicationRoutes = require('./features/franchise/routes/franchiseApplication.routes');
+
+app.use('/api/franchises', franchiseRoutes);
+app.use('/api/franchise-applications', applicationRoutes);
+
+
 // Routes
 app.use('/api/roles', roleRoutes);
 app.use('/api/users', userRoutes);
