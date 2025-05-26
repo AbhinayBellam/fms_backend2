@@ -75,11 +75,29 @@ Auto-create stock entries when a product is added
 
 
 
+// Order Apis:
+Method	Endpoint	Description	Who Can Use
+POST	/orders	Create a new order	Customer
+GET	/orders	Get all orders	Franchisor / Admin
+GET	/orders/:id	Get order by ID	Customer / Franchisee / Franchisor
+GET	/orders/customer/:customerId	Get all orders placed by a customer	Customer
+PUT	/orders/:id/status	Update order status (e.g., Processing → Shipped)	Franchisee
+DELETE	/orders/:id	Delete an order	Franchisor / Admin (optional)
 
 
+// Future Implementations :
+Authorization: Restrict endpoints by role (Customer/Franchisee/Franchisor).
 
+Order notifications (email/sms).
 
+Generate order invoice.
 
+Link payment collection to orders.
+Add filters (e.g., by franchise or status),
+
+Include pagination or search,
+
+Or integrate payment confirmation with orders.
 
 
 
