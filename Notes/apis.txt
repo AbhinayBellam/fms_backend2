@@ -1,0 +1,57 @@
+
+//Role apis
+POST /api/roles – Create a new role
+
+GET /api/roles – Get all roles
+
+GET /api/roles/:id – Get a role by ID
+
+PUT /api/roles/:id – Update a role
+
+DELETE /api/roles/:id – Delete a role
+
+
+
+
+
+//User apis:
+Method	Endpoint	Description
+POST	/api/users/register	Register a new user
+POST	/api/users/login	Login and get JWT token
+GET	/api/users/profile	Get current user's profile
+GET	/api/users/	Get all users
+GET	/api/users/:id	Get user by ID
+PUT	/api/users/:id	Update user by ID
+DELETE	/api/users/:id	Delete user by ID
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
