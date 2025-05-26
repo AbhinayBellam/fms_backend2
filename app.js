@@ -22,6 +22,14 @@ app.use('/api/franchises', franchiseRoutes);
 app.use('/api/franchise-applications', applicationRoutes);
 
 
+
+const productRoutes = require('./features/product/routes/product.routes');
+const stockRoutes = require('./features/product/routes/stock.routes');
+
+app.use('/api/products', productRoutes);
+app.use('/api/stocks', stockRoutes);
+
+
 // Routes
 app.use('/api/roles', roleRoutes);
 app.use('/api/users', userRoutes);

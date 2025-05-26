@@ -32,6 +32,45 @@ DELETE	/api/users/:id	Delete a user by ID
 Add franchise analytics route later*******************
 
 
+//Franchise Apis: 
+Method	Endpoint	Description	Used By
+POST	/api/franchises	Create new franchise	Franchisor
+GET	/api/franchises	Get all franchises	Franchisor
+GET	/api/franchises/:id	Get franchise by ID	All roles
+PUT	/api/franchises/:id	Update franchise	Franchisor
+DELETE	/api/franchises/:id	Delete franchise	Franchisor
+
+//FranchiseApplication Apis:
+Method	Endpoint	Description	Used By
+POST	/api/franchise-applications	Submit application for franchise	Franchisee
+GET	/api/franchise-applications	Get all applications (admin view)	Franchisor
+GET	/api/franchise-applications/:id	Get specific application	Franchisor
+PUT	/api/franchise-applications/:id	Update application status	Franchisor
+DELETE	/api/franchise-applications/:id	Delete an application (if rejected)	Franchisor
+
+
+
+//Product Apis:
+Method	Endpoint	Description	Used By
+POST	/api/products	Add new product	Franchisor
+GET	/api/products	Get all products	All roles
+GET	/api/products/:id	Get single product by ID	All roles
+PUT	/api/products/:id	Update product	Franchisor
+DELETE	/api/products/:id	Delete product	Franchisor
+
+
+//Inventory/Stock Apis:
+Method	Endpoint	Description	Used By
+GET	/api/stocks/:franchiseId	Get stock for a specific franchise	Franchisee
+
+// Future implementations for product and inventory :
+APIs to add/update stock quantities (currently only read).
+
+Customer-facing product list (with filtering/searching).
+
+Inventory alert system for low stock.
+
+Auto-create stock entries when a product is added
 
 
 
