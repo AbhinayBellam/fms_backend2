@@ -101,7 +101,24 @@ Or integrate payment confirmation with orders.
 
 
 
+// StockRequest Apis:
 
+Method	Endpoint	Description	Role
+POST	/stock-requests	Create stock request	Franchisee
+GET	/stock-requests	Get all stock requests	Franchisor
+GET	/stock-requests/:id	Get stock request by ID	Franchisor
+GET	/stock-requests/franchise/:franchiseId	Get stock requests by franchise	Franchisee
+PUT	/stock-requests/:id/status	Approve/Reject stock request	Franchisor
+DELETE	/stock-requests/:id	Delete stock request	Franchisor.
+
+//Future implementations of stockRequest :
+Authorization Middleware (next phase).
+
+Notifications (on stock request approval/rejection).
+
+Link to Inventory (update inventory after approval).
+
+Validations (check for duplicate pending requests).
 
 
 
