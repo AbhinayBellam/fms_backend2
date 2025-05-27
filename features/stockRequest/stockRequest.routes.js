@@ -1,7 +1,7 @@
 // routes/stockRequest.routes.js
 const express = require('express');
 const router = express.Router();
-const stockRequestController = require('../controllers/stockRequest.controller');
+const stockRequestController = require('./stockRequest.controller');
 
 // Franchisee
 router.post('/', stockRequestController.createStockRequest);

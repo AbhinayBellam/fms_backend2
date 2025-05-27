@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const userService = require('./user.service');
-const { sendResetEmail } = require('../../utils/email.utils');
+const { sendResetEmail } = require('../utils/email.utils');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 const RESET_TOKEN_EXPIRE_MINUTES = 15;

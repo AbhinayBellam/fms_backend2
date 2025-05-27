@@ -1,4 +1,4 @@
-// src/features/role/role.routes.js
+//  /features/role/role.routes.js
 const express = require('express');
 const router = express.Router();
 const roleController = require('./role.controller');

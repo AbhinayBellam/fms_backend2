@@ -1,6 +1,6 @@
 // src/features/product/routes/product.routes.js
 const router = require('express').Router();
-const controller = require('../controllers/product.controller');
+const controller = require('./product.controller');
 const authenticate = require('@/middlewares/authenticate');
 
 router.post('/', authenticate, controller.createProduct);          // Franchisor

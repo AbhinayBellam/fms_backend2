@@ -1,5 +1,5 @@
 // controllers/stockRequest.controller.js
-const stockRequestService = require('../services/stockRequest.service');
+const stockRequestService = require('./stockRequest.service');
 
 exports.createStockRequest = async (req, res) => {
   try {

@@ -1,5 +1,5 @@
 // services/stockRequest.service.js
-const StockRequest = require('../models/stockRequest.model');
+const StockRequest = require('./stockRequest.model');
 
 exports.createStockRequest = async (data) => {
   return await StockRequest.create(data);
