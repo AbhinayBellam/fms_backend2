@@ -1,5 +1,5 @@
 // src/features/product/controllers/product.controller.js
-const productService = require('../services/product.service');
+const productService = require('./product.service');
 
 exports.createProduct = async (req, res) => {
   const result = await productService.create(req.body, req.user._id);

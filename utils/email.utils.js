@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-exports.sendResetEmail = async (to, resetLink) => {
+const sendEmail = async (to, subject, html) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -9,10 +9,14 @@ exports.sendResetEmail = async (to, resetLink) => {
     }
   });
 
-  await transporter.sendMail({
+  const mailOptions = {
     from: '"FMS Support" <no-reply@fms.com>',
     to,
-    subject: 'Reset Your Password',
-    html: `<p>Click <a href="${resetLink}">here</a> to reset your password. This link is valid for 15 minutes.</p>`
-  });
+    subject,
+    html
+  };
+
+  await transporter.sendMail(mailOptions);
 };
+
+module.exports = { sendEmail };

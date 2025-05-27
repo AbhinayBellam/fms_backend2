@@ -1,5 +1,5 @@
 // src/features/franchise/controllers/franchise.controller.js
-const service = require('../services/franchise.service');
+const service = require('./franchise.service');
 
 exports.createFranchise = async (req, res) => {
   const result = await service.createFranchise(req.body);

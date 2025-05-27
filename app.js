@@ -1,9 +1,12 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const roleRoutes = require('./role/role.routes');
-const userRoutes = require('./user/user.routes');
-
+const roleRoutes = require('./features/role/role.routes');
+const userRoutes = require('./features/user/user.routes');
+const franchiseRoutes = require('./features/franchise/franchise.routes');
+const applicationRoutes = require('./features/franchiseApplication/franchiseApplication.routes');
+const productRoutes = require('./features/product/product.routes');
+const stockRoutes = require('./features/inventory/inventory.routes');
 // import other routes here
 
 const app = express();
@@ -15,24 +18,13 @@ app.use(morgan('dev'));
 
 
 
-const franchiseRoutes = require('./features/franchise/routes/franchise.routes');
-const applicationRoutes = require('./features/franchise/routes/franchiseApplication.routes');
-
-app.use('/api/franchises', franchiseRoutes);
-app.use('/api/franchise-applications', applicationRoutes);
-
-
-
-const productRoutes = require('./features/product/routes/product.routes');
-const stockRoutes = require('./features/product/routes/stock.routes');
-
-app.use('/api/products', productRoutes);
-app.use('/api/stocks', stockRoutes);
-
-
 // Routes
 app.use('/api/roles', roleRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/franchises', franchiseRoutes);
+app.use('/api/franchise-applications', applicationRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/stocks', stockRoutes);
 
 // Test route
 app.get('/', (req, res) => {

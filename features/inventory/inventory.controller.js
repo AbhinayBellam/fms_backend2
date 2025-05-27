@@ -1,7 +1,7 @@
 // src/features/product/controllers/stock.controller.js
-const stockService = require('../services/stock.service');
+const inventoryService = require('./inventory.service');
 
-exports.getStockByFranchise = async (req, res) => {
-  const stocks = await stockService.getByFranchise(req.params.franchiseId);
-  res.json(stocks);
+exports.getInventoryByFranchise = async (req, res) => {
+  const inventory = await inventoryService.getByFranchise(req.params.franchiseId);
+  res.json(inventory);
 };

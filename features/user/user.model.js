@@ -43,7 +43,6 @@ const userSchema = new mongoose.Schema(
     },
     address: {
       type: addressSchema,
-      required: true,
     },
     isVerified: {
       type: Boolean,

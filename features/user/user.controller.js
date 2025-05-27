@@ -1,13 +1,16 @@
+// src/features/user/user.controller.js
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const userService = require('./user.service');
-const { sendResetEmail } = require('../utils/email.utils');
+const {sendEmail} = require('../../utils/email.utils');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
-const RESET_TOKEN_EXPIRE_MINUTES = 15;
+const generateToken = (user) => jwt.sign(
+  { id: user._id, email: user.email, role: user.role },
+  process.env.JWT_SECRET,
+  { expiresIn: '7d' }
+);
 
-// CRUD
-exports.createUser = async (req, res) => {
+exports.register = async (req, res) => {
   try {
     const user = await userService.createUser(req.body);
     res.status(201).json(user);
@@ -16,80 +19,75 @@ exports.createUser = async (req, res) => {
   }
 };
 
-exports.getAllUsers = async (req, res) => {
+exports.login = async (req, res) => {
   try {
-    const users = await userService.getAllUsers();
-    res.status(200).json(users);
+    const user = await userService.findUserByEmail(req.body.email);
+    if (!user || !(await user.comparePassword(req.body.password))) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    const token = generateToken(user);
+    res.json({ token, user });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const user = await userService.findUserByEmail(req.body.email);
+    if (!user) return res.status(404).json({ error: 'Email not found' });
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiry = Date.now() + 1000 * 60 * 15;
+
+    await userService.saveResetToken(user.email, token, expiry);
+
+    const resetLink = `http://localhost:3000/reset-password/${token}`;
+    await sendEmail(user.email, 'Reset Password', `Click to reset: ${resetLink}`);
+
+    res.json({ message: 'Reset link sent to your email' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const user = await userService.resetPassword(req.params.token, req.body.password);
+    if (!user) return res.status(400).json({ error: 'Token invalid or expired' });
+    res.json({ message: 'Password reset successful' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// CRUD
+exports.createUser = exports.register;
+
+exports.getAllUsers = async (req, res) => {
+  const users = await userService.getAllUsers();
+  res.json(users);
 };
 
 exports.getUserById = async (req, res) => {
-  try {
-    const user = await userService.getUserById(req.params.id);
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  const user = await userService.getUserById(req.params.id);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.json(user);
 };
 
 exports.updateUser = async (req, res) => {
-  try {
-    const user = await userService.updateUser(req.params.id, req.body);
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+  const user = await userService.updateUser(req.params.id, req.body);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.json(user);
 };
 
 exports.deleteUser = async (req, res) => {
-  try {
-    await userService.deleteUser(req.params.id);
-    res.status(204).send();
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  await userService.deleteUser(req.params.id);
+  res.json({ message: 'User deleted' });
 };
 
-// Forgot Password
-exports.forgotPassword = async (req, res) => {
-  const { email } = req.body;
-  try {
-    const user = await userService.findUserByEmail(email);
-    if (!user) return res.status(404).json({ error: 'User not found' });
-
-    const token = jwt.sign(
-      { id: user._id },
-      JWT_SECRET,
-      { expiresIn: `${RESET_TOKEN_EXPIRE_MINUTES}m` }
-    );
-
-    const resetLink = `http://localhost:3000/reset-password/${token}`;
-    await sendResetEmail(user.email, resetLink);
-
-    res.status(200).json({ message: 'Reset link sent to your email' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// Reset Password
-exports.resetPassword = async (req, res) => {
-  const { token } = req.params;
-  const { password } = req.body;
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await userService.findUserById(decoded.id);
-    if (!user) return res.status(404).json({ error: 'User not found' });
-
-    user.password = password;
-    await user.save();
-
-    res.status(200).json({ message: 'Password successfully reset' });
-  } catch (err) {
-    res.status(400).json({ error: 'Invalid or expired token' });
-  }
+exports.getUserByEmail = async (req, res) => {
+  const user = await userService.findUserByEmail(req.params.email);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.json(user);
 };

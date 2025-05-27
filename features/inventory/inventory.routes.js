@@ -1,7 +1,7 @@
 // src/features/product/routes/stock.routes.js
 const router = require('express').Router();
-const controller = require('../controllers/stock.controller');
+const controller = require('./inventory.controller');
 
-router.get('/:franchiseId', controller.getStockByFranchise); // Franchisee
+router.get('/:franchiseId', controller.getInventoryByFranchise); // Franchisee
 
 module.exports = router;

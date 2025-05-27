@@ -1,5 +1,5 @@
 // services/order.service.js
-const Order = require('../models/order.model');
+const Order = require('./order.model');
 
 exports.createOrder = async (data) => {
   const order = new Order(data);

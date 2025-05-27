@@ -1,5 +1,5 @@
 // src/features/franchise/services/franchise.service.js
-const Franchise = require('../models/franchise.model');
+const Franchise = require('./franchise.model');
 
 exports.createFranchise = async (data) => {
   return await Franchise.create(data);

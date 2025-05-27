@@ -1,5 +1,5 @@
 // src/features/franchise/controllers/franchiseApplication.controller.js
-const service = require('../services/franchiseApplication.service');
+const service = require('./franchiseApplication.service');
 
 exports.applyForFranchise = async (req, res) => {
   const result = await service.apply(req.body);

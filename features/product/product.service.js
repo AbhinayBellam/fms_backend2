@@ -1,5 +1,5 @@
 // src/features/product/services/product.service.js
-const Product = require('../models/product.model');
+const Product = require('./product.model');
 
 exports.create = async (data, userId) => {
   return await Product.create({ ...data, createdBy: userId });

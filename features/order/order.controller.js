@@ -1,5 +1,5 @@
 // controllers/order.controller.js
-const orderService = require('../services/order.service');
+const orderService = require('./order.service');
 
 exports.createOrder = async (req, res) => {
   try {
