@@ -1,7 +1,20 @@
 // src/features/user/user.service.js
 const User = require('./user.model');
+const createUser = async (data) => {
+  try {
+    console.log('Creating user with data:', data);
+    const newUser = new User(data);
+    console.log('New user object:', newUser);
 
-const createUser = async (data) => new User(data).save();
+    const savedUser = await newUser.save();
+    console.log('Saved user:', savedUser);
+    return savedUser;
+  } catch (error) {
+    console.error('Error while saving user:', error);
+    throw error;
+  }
+};
+
 
 const getAllUsers = async () => User.find().populate('role');
 

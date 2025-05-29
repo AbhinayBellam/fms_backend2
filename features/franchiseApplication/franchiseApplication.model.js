@@ -13,7 +13,7 @@ const franchiseApplicationSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Pending', 'Approved', 'Rejected'],
+    enum: ['Pending', 'Approved', 'Rejected','Not Registered'],
     default: 'Pending',
   }
 }, { timestamps: true });
