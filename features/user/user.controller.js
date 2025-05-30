@@ -93,3 +93,48 @@ exports.getUserByEmail = async (req, res) => {
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json(user);
 };
+
+
+
+const franchiseAppService = require('../franchiseApplication/franchiseApplication.service');
+
+exports.getDashboard = async (req, res) => {
+  const { role, _id } = req.user;
+
+  try {
+    switch (role) {
+      case 'Franchisor':
+        // Fetch all pending franchise applications
+        const pendingApplications = await franchiseAppService.getPendingApplications();
+        return res.json({
+          message: 'Franchisor dashboard',
+          pendingApplications,
+        });
+
+      case 'Franchisee':
+        const app = await franchiseAppService.getApplicationByFranchiseeId(_id);
+        if (!app) {
+          return res.json({ message: 'Apply for a franchise', redirectTo: 'ApplyFranchiseScreen' });
+        }
+
+        switch (app.status) {
+          case 'pending':
+            return res.json({ message: 'Waiting for approval', redirectTo: 'PendingApprovalScreen' });
+          case 'approved':
+            return res.json({ message: 'Welcome to your dashboard', redirectTo: 'FranchiseDashboard' });
+          case 'rejected':
+            return res.json({ message: 'Application Rejected', redirectTo: 'ApplicationRejectedScreen' });
+        }
+
+      case 'Customer':
+        return res.json({ message: 'Customer dashboard', redirectTo: 'CustomerDashboard' });
+
+      default:
+        return res.status(403).json({ error: 'Unknown role' });
+    }
+  } catch (err) {
+    console.error('Dashboard error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+

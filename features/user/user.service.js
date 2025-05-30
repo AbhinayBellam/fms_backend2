@@ -1,13 +1,23 @@
 // src/features/user/user.service.js
 const User = require('./user.model');
+const Role = require('../role/role.model');
+
 const createUser = async (data) => {
   try {
-    console.log('Creating user with data:', data);
-    const newUser = new User(data);
-    console.log('New user object:', newUser);
+    // Convert role name to Role ObjectId
+    const role = await Role.findOne({ name: data.role });
+    if (!role) {
+      throw new Error('Invalid role provided');
+    }
 
+    data.role = role._id; // Replace role string with ObjectId
+
+    // console.log('Creating user with data:', data);
+    const newUser = new User(data);
+    // console.log('New user object:', newUser);
+// 
     const savedUser = await newUser.save();
-    console.log('Saved user:', savedUser);
+    // console.log('Saved user:', savedUser);
     return savedUser;
   } catch (error) {
     console.error('Error while saving user:', error);
