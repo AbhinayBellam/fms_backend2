@@ -123,7 +123,14 @@ Validations (check for duplicate pending requests).
 
 
 
+*****----------------------- *****
+1). After creating landing and get started and login and register pages. 
+    Error : while connecting to backend. when registering - i got several errors because i didn't
+    make that role is not required in user model.
+    error is: network connection failed.
 
+2). Then after creating franchisee related screens and used role based redirecting to screens after 
+    login. when login again got network connection failure because i doesn't used axios to connect. 
 
 
 

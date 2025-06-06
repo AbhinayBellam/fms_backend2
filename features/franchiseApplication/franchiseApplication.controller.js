@@ -9,7 +9,7 @@ exports.applyForFranchise = async (req, res) => {
     const result = await service.apply({
       franchiseeId: req.user._id,
       region: req.body.region,
-      status: 'pending',
+      status: 'Not_Applied',
     });
 
     res.status(201).json(result);

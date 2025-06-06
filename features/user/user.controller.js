@@ -5,7 +5,7 @@ const userService = require('./user.service');
 const {sendEmail} = require('../../utils/email.utils');
 
 const generateToken = (user) => jwt.sign(
-  { id: user._id, email: user.email, role: user.role },
+  { id: user._id, email: user.email, role: user.role, franchiseStatus: user.franchiseStatus },
   process.env.JWT_SECRET,
   { expiresIn: '7d' }
 );
@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
   try {
     console.log('Registering user:', req.body);
     const user = await userService.createUser(req.body);
-    console.log('User created:', user);
+    // console.log('User created:', user);
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -23,12 +23,14 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
+    console.log('login hit')
     const user = await userService.findUserByEmail(req.body.email);
     if (!user || !(await user.comparePassword(req.body.password))) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
     const token = generateToken(user);
     res.json({ token, user });
+    console.log('User logged in:', user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -112,19 +114,18 @@ exports.getDashboard = async (req, res) => {
         });
 
       case 'Franchisee':
-        const app = await franchiseAppService.getApplicationByFranchiseeId(_id);
-        if (!app) {
-          return res.json({ message: 'Apply for a franchise', redirectTo: 'ApplyFranchiseScreen' });
-        }
-
-        switch (app.status) {
-          case 'pending':
-            return res.json({ message: 'Waiting for approval', redirectTo: 'PendingApprovalScreen' });
-          case 'approved':
-            return res.json({ message: 'Welcome to your dashboard', redirectTo: 'FranchiseDashboard' });
-          case 'rejected':
-            return res.json({ message: 'Application Rejected', redirectTo: 'ApplicationRejectedScreen' });
-        }
+  switch (req.user.franchiseStatus) {
+    case 'Not Applied':
+      return res.json({ message: 'Apply for a franchise', redirectTo: 'ApplyFranchiseScreen' });
+    case 'Pending':
+      return res.json({ message: 'Waiting for approval', redirectTo: 'PendingApprovalScreen' });
+    case 'Approved':
+      return res.json({ message: 'Welcome to your dashboard', redirectTo: 'FranchiseDashboard' });
+    case 'Rejected':
+      return res.json({ message: 'Application Rejected', redirectTo: 'ApplicationRejectedScreen' });
+    default:
+      return res.status(400).json({ error: 'Unknown franchise status' });
+  }
 
       case 'Customer':
         return res.json({ message: 'Customer dashboard', redirectTo: 'CustomerDashboard' });

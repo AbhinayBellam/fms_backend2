@@ -30,7 +30,7 @@ const getAllUsers = async () => User.find().populate('role');
 
 const getUserById = async (id) => User.findById(id).populate('role');
 
-const updateUser = async (id, data) => User.findByIdAndUpdate(id, data, { new: true });
+const updateUser = async (id, data) => User.findByIdAndUpdate(id, data, { new: true }).populate('role');
 
 const deleteUser = async (id) => User.findByIdAndDelete(id);
 
@@ -48,6 +48,9 @@ const resetPassword = async (token, newPassword) =>
     { password: newPassword, resetPasswordToken: null, resetPasswordExpires: null },
     { new: true }
   );
+
+
+  
 
 module.exports = {
   createUser,

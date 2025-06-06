@@ -41,6 +41,11 @@ const userSchema = new mongoose.Schema(
       ref: 'Role',
       required: true,
     },
+    franchiseStatus: {
+  type: String,
+      enum: ['Pending', 'Approved', 'Rejected', 'Not_Applied'],
+      default: 'Not_Applied',
+    },
     address: {
       type: addressSchema,
     },
