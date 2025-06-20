@@ -4,18 +4,30 @@ const crypto = require('crypto');
 const userService = require('./user.service');
 const {sendEmail} = require('../../utils/email.utils');
 
+const sanitizeUser = require('../../utils/sanitizeUser');
+
 const generateToken = (user) => jwt.sign(
-  { id: user._id, email: user.email, role: user.role, franchiseStatus: user.franchiseStatus },
+  { id: user._id, email: user.email, role: user.role?.name, franchiseStatus: user.franchiseStatus },
   process.env.JWT_SECRET,
+  { expiresIn: '15m' }
+);
+
+const generateRefreshToken = (user) => jwt.sign(
+  { id: user._id },
+  process.env.JWT_REFRESH_SECRET,
   { expiresIn: '7d' }
 );
 
+
+
 exports.register = async (req, res) => {
   try {
-    console.log('Registering user:', req.body);
     const user = await userService.createUser(req.body);
-    // console.log('User created:', user);
-    res.status(201).json(user);
+    const cleanUser = await userService.findUserByEmail(user.email); // Populate role
+    res.status(201).json({
+      message: 'User registered successfully',
+      user: sanitizeUser(cleanUser)
+    });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -23,18 +35,35 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    console.log('login hit')
+    console.log('login hit');
     const user = await userService.findUserByEmail(req.body.email);
     if (!user || !(await user.comparePassword(req.body.password))) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-    const token = generateToken(user);
-    res.json({ token, user });
-    console.log('User logged in:', user);
+
+    const accessToken = generateToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    res.json({
+      success: true,
+      message: 'Login successful',
+      token: accessToken,
+      refreshToken,
+      user: sanitizeUser(user)
+    });
+
+    console.log('User logged in:', {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role?.name,
+      franchiseStatus: user.franchiseStatus
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.forgotPassword = async (req, res) => {
   try {

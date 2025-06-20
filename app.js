@@ -26,7 +26,7 @@ app.use('/api/franchise-applications', applicationRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/stocks', stockRoutes);
 
-// Test route
+// Test route 
 app.get('/', (req, res) => {
   res.send('🚀 Franchise Management System Backend is running');
 });
