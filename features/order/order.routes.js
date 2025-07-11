@@ -2,12 +2,14 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('./order.controller');
+const authenticate = require('../../middleware/authenticate');
+const auth = require('../../middleware/auth');
 
-router.post('/', orderController.createOrder);
-router.get('/', orderController.getAllOrders);
-router.get('/:id', orderController.getOrderById);
-router.get('/customer/:customerId', orderController.getOrdersByCustomer);
-router.put('/:id/status', orderController.updateOrderStatus);
-router.delete('/:id', orderController.deleteOrder);
+router.post('/',authenticate,auth('Customer'), orderController.createOrder);
+router.get('/',authenticate,auth('Franchisee'), orderController.getAllOrders);
+router.get('/:id',authenticate,auth('Customer', 'Franchisee'), orderController.getOrderById);
+router.get('/customer/:customerId',authenticate,auth('Customer'), orderController.getOrdersByCustomer);
+router.put('/:id/status',authenticate,auth('Franchisee'), orderController.updateOrderStatus);
+router.delete('/:id',authenticate,auth('Franchisee'), orderController.deleteOrder);
 
 module.exports = router;

@@ -36,12 +36,13 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     console.log('login hit');
-    const user = await userService.findUserByEmail(req.body.email);
+    const user = await userService.findUserByEmail(req.body.email); // Populate role
     if (!user || !(await user.comparePassword(req.body.password))) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-
+    console.log('User populated:', user.role);
     const accessToken = generateToken(user);
+    console.log('Generated token payload:', jwt.decode(accessToken));
     const refreshToken = generateRefreshToken(user);
 
     res.json({
@@ -123,6 +124,58 @@ exports.getUserByEmail = async (req, res) => {
   const user = await userService.findUserByEmail(req.params.email);
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json(user);
+};
+exports.softDeleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const result = await userService.softDeleteUser(userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getAllUsersNotDeleted = async (req, res) => {
+  try {
+    const users = await userService.getAllUsers();
+    return res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+exports.restoreUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const result = await userService.restoreUser(userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// user.controller.js
+exports.getProfile = async (req, res) => {
+  try {
+    console.log('User from req.user:', req.user); 
+    const user = await userService.getById(req.user._id);
+    console.log('Fetched user:', user); // ✅ Add this
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    console.error('Error in getProfile:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const user = await userService.updateUser(req.user._id, req.body);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
 };
 
 

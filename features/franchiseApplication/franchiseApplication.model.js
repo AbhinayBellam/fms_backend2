@@ -2,20 +2,21 @@
 const mongoose = require('mongoose');
 
 const franchiseApplicationSchema = new mongoose.Schema({
-  franchiseeId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+  franchiseeId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+  region: { type: String, required: true },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    zipCode: String,
+    country: String
   },
-  region: {
-    type: String,
-    required: true,
-  },
+  additionalDetails: { type: String },
   status: {
     type: String,
-    enum: ['Pending', 'Approved', 'Rejected','Not_Applied'],
+    enum: ['Not_Applied', 'Pending', 'Approved', 'Rejected'],
     default: 'Not_Applied',
-  }
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('FranchiseApplication', franchiseApplicationSchema);
